@@ -1,4 +1,4 @@
-Battery is a blog engine written in python. Note that this project is still WIP.
+Battery is a blog engine written in python. Note that this project is WIP.
 
 ## Features
 - [x] post entry
