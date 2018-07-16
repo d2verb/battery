@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block body %}
+{% for entry in entries %}
+<article>
+  <div class="title">
+    <h1>
+      <a href="{{ url_for('show_entry', entry_id=entry.id) }}">
+        {{ entry.title }}
+      </a>
+    </h1>
+
+  </div>
+  <div class="byline">
+    <i class="far fa-clock"></i>
+    <time datetime={{entry.created_at}}>{{ entry.created_at }}</time>
+    <i class="fas fa-user"></i>
+    <span class="author">{{ get_username(entry.user_id) }}</span>
+
+    {% if entry.user_id == session.user_id %}
+    <a class="edit" href="{{ url_for('edit_entry', entry_id=entry.id) }}"><i class="far fa-edit"></i></a>
+    <a class="delete" href="{{ url_for('delete_entry', entry_id=entry.id) }}"><i class="far fa-trash-alt"></i></a>
+    {% endif %}
+  </div>
+
+  <div class="content">
+    {{ markdown_to_html(entry.content) | safe }}
+  </div>
+</article>
+{% endfor %}
+{% endblock %}

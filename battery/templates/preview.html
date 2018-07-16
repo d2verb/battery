@@ -1,0 +1,21 @@
+{% extends "meta.html" %}
+{% block container %}
+<article>
+  <div class="title">
+    <h1>{{ title }}</h1>
+  </div>
+
+  <div class="byline">
+    <i class="far fa-clock"></i>
+    <time>YYYY-MM-DD</time>
+    <i class="fas fa-user"></i>
+    <span class="author">{{ get_username(session.user_id) }}</span>
+  </div>
+
+
+  <div class="content">
+    {{ content }}
+  </div>
+
+</article>
+{% endblock %}

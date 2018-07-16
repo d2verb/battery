@@ -1,0 +1,51 @@
+{% extends "meta.html" %}
+{% block container %}
+<!-- Sign in link -->
+<nav class="toolbar">
+  <ul>
+    {% if session.user_id %}
+    <li><a href="{{ url_for('create_entry') }}">New entry</a></li>
+    <li><a href="{{ url_for('logout') }}">Log out</a></li>
+    <li>({{ g.user.name }})</li>
+    {% else %}
+    <li><a href="{{ url_for('login') }}">Log in</a></li>
+    {% endif %}
+  </ul>
+</nav>
+
+<header>
+  <!-- Logo -->
+  <div class="logo">
+    <a href="/">
+      <img src="{{ url_for('static', filename='img/logo.png') }}">
+    </a>
+  </div>
+</header>
+
+{% for message in get_flashed_messages() %}
+<div class=flash>{{ message }}</div>
+{% endfor %}
+
+<nav class="navbar">
+  <ul>
+    <li><a href="/">Home</a></li>
+    <li><a href="#">About</a></li>
+    <li><a href="#">Archive</a></li>
+    <li>
+      <form action="{{ url_for('search_entries') }}" method="get" class="search-box">
+        <input type="text" placeholder="Keyword" name="q">
+        <input type="submit" value="Search">
+      </form>
+    </li>
+  </ul>
+</nav>
+
+{% block body %}{% endblock %}
+
+<footer>
+  <p class="copyright">
+  © Copyright 2018 d2verb.
+  </p>
+</footer>
+
+{% endblock %}

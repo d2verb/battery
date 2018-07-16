@@ -1,0 +1,340 @@
+html {
+  font-size: 62.5%;
+}
+
+body {
+  font-family: 'Roboto', sans-serif;
+  font-size: 1.4rem;
+}
+
+.flash {
+  background: #cee5F5;
+  padding: 0.5em;
+  border: 1px solid #aacbe2;
+}
+
+a {
+  color: black;
+  text-decoration: none;
+}
+
+a, a:after, a:before {
+  transition: all .3s;
+}
+
+a:hover {
+  color: #777;
+}
+
+.container {
+  width: 800px;
+  margin: 0 auto;
+}
+
+/* toolbar(see base.html) */
+.toolbar ul {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  list-style: none;
+  padding-left: 0;
+}
+
+.toolbar ul li {
+  text-decoration: none;
+  margin-right: 15px;
+}
+
+.toolbar ul li:first-child {
+  margin-left: auto;
+}
+
+/* search box */
+.sign-in-link {
+  display: block;
+  text-align: right;
+}
+
+/* logo */
+.logo {
+  width: 160px;
+  height: 200px;
+  margin: 0 auto;
+}
+
+.logo img {
+  width: 100%;
+  height: 100%;
+}
+
+/* navbar(see base.html) */
+.navbar {
+  margin-top: 10px;
+  border-bottom: 1px solid;
+}
+
+.navbar ul {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  list-style: none;
+  padding-left: 0;
+}
+
+.navbar ul li {
+  font-size: 1.6rem;
+  font-weight: 900;
+  text-decoration: none;
+  margin-right: 15px;
+}
+
+.navbar ul li:last-child {
+  margin-left: auto;
+  margin-right: 0;
+}
+
+/* Footer */
+footer {
+  position: relative;
+  width: 100%;
+  margin-top: 20px;
+}
+
+p.copyright {
+  position: absolute;
+  width: 100%;
+  text-align: center;
+}
+
+/* search box */
+.search-box input {
+  box-sizing: border-box;
+  border: 1px solid;
+  padding: 5px;
+  font-family: inherit;
+}
+
+.search-box input[type="text"] {
+  border-color: #bbb;
+  color: #555;
+}
+
+.search-box input[type="text"]:focus {
+  border-color: #888;
+}
+
+.search-box input[type="submit"] {
+  background: black;
+  color: #fff;
+  cursor: pointer;
+  font-weight: 700;
+}
+
+/* login form */
+.login-form {
+  width: 200px;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 20px;
+}
+
+.login-form input {
+  box-sizing: border-box;
+  display: block;
+  width: 100%;
+  border: 1px solid;
+  padding: 5px;
+  font-family: inherit;
+  margin-bottom: 10px;
+}
+
+.login-form input[type="text"],
+.login-form input[type="password"] {
+  border-color: #bbb;
+  color: #555;
+}
+
+.login-form input[type="text"]:focus,
+.login-form input[type="password"]:focus {
+  border-color: #888;
+}
+
+.login-form input[type="submit"] {
+  background: black;
+  color: #fff;
+  cursor: pointer;
+  font-weight: 700;
+}
+
+/* editor */
+.editor {
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 20px;
+}
+
+.editor input,
+.editor textarea {
+  box-sizing: border-box;
+  display: block;
+  border: 1px solid;
+  padding: 5px;
+  font-family: inherit;
+  margin-bottom: 10px;
+}
+
+.editor input[type="submit"],
+.editor input[type="button"] {
+  width: 70px;
+}
+
+.editor textarea {
+  height: 300px;
+  font-size: 1.2rem;
+}
+
+.editor input[type="text"],
+.editor textarea {
+  width: 100%;
+}
+
+.editor input[type="text"],
+.editor textarea {
+  border-color: #bbb;
+}
+
+.editor input[type="text"]:focus,
+.editor textarea:focus {
+  border-color: #888;
+}
+
+.editor input[type="submit"],
+.editor input[type="button"] {
+  display: inline-block;
+  background: black;
+  color: #fff;
+  cursor: pointer;
+  font-weight: 700;
+}
+
+/* entry */
+/* comment form */
+.comments form {
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 20px;
+}
+
+.comments form input,
+.comments form textarea {
+  box-sizing: border-box;
+  display: block;
+  border: 1px solid;
+  padding: 5px;
+  font-family: inherit;
+  margin-bottom: 10px;
+}
+
+.comments form input[type="submit"] {
+  width: 70px;
+}
+
+.comments form textarea {
+  height: 100px;
+  font-size: 1.2rem;
+}
+
+.comments form input[type="text"],
+.comments form textarea {
+  width: 100%;
+}
+
+.comments form input[type="text"],
+.comments form textarea {
+  border-color: #bbb;
+}
+
+.comments form input[type="text"]:focus,
+.comments form textarea:focus {
+  border-color: #888;
+}
+
+.comments form input[type="submit"],
+.comments form button {
+  display: inline-block;
+  background: black;
+  color: #fff;
+  cursor: pointer;
+  font-weight: 700;
+}
+
+/* comment */
+.comments h3 {
+  padding-top: 5px;
+}
+
+.comment {
+  border: 1px solid black;
+  margin-bottom: 10px;
+  padding: 10px;
+}
+
+.comment .author {
+  font-weight: 900;
+}
+
+.comment .menu ul {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  list-style: none;
+  padding-left: 0;
+  margin-bottom: 0;
+}
+
+.comment .menu ul li {
+  text-decoration: none;
+  margin-left: 5px;
+  margin-right: 5px;
+}
+
+.comment .menu ul li:last-child {
+  margin-right: 0;
+}
+
+.comment .menu ul li:first-child {
+  margin-left: auto;
+}
+
+.comment .menu ul li a {
+  color: #b7282e;
+  font-weight: 700;
+}
+
+/* byline */
+.byline {
+  display: flex;
+  margin-bottom: 10px;
+}
+
+.byline time {
+  margin-right: 10px;
+}
+
+.byline .edit {
+  margin-left: auto;
+}
+
+.byline .delete {
+  margin-right: 5px;
+}
+
+.byline i {
+  margin-right: 2px;
+}
+
+.byline .fa-trash-alt {
+  color: #b7282e;
+}

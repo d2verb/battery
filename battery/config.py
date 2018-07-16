@@ -1,0 +1,3 @@
+SQLALCHEMY_DATABASE_URI = "sqlite:///battery.db"
+SECRET_KEY = "dev"
+SQLALCHEMY_TRACK_MODIFICATIONS = False
