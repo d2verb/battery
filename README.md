@@ -13,5 +13,5 @@ Battery is a blog engine written in python. Note that this project is WIP.
 ## ScreenShots
 ![entry page](img/entry-page-screenshot.png)
 
-## Copyrights
+## LICENSE
 This software is released under the MIT License, see LICENSE.
