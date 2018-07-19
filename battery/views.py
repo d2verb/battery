@@ -5,26 +5,9 @@ from flask import g, jsonify, abort
 from functools import wraps
 from markdown import markdown
 
-def login_required(fn):
-    @wraps(fn)
-    def decorated_view(*args, **kwargs):
-        if g.user is None:
-            flash("You must log in first")
-            return redirect(url_for("login", next=request.path))
-        return fn(*args, **kwargs)
-    return decorated_view
-
 def markdown_to_html(mdtext):
     html = markdown(mdtext, extensions=['extra', 'codehilite'])
     return html
-
-@app.before_request
-def load_user():
-    user_id = session.get("user_id")
-    if user_id is None:
-        g.user = None
-    else:
-        g.user = User.query.get(session["user_id"])
 
 def get_username(user_id):
     user = User.query.get(user_id)
@@ -35,6 +18,23 @@ def get_username(user_id):
 
 app.jinja_env.globals.update(get_username=get_username)
 app.jinja_env.globals.update(markdown_to_html=markdown_to_html)
+
+def login_required(fn):
+    @wraps(fn)
+    def decorated_view(*args, **kwargs):
+        if g.user is None:
+            flash("You must log in first")
+            return redirect(url_for("login", next=request.path))
+        return fn(*args, **kwargs)
+    return decorated_view
+
+@app.before_request
+def load_user():
+    user_id = session.get("user_id")
+    if user_id is None:
+        g.user = None
+    else:
+        g.user = User.query.get(session["user_id"])
 
 @app.route("/")
 def index():
@@ -133,8 +133,10 @@ def search_entries():
     entries = Entry.query.filter(Entry.content.contains(q))
     return render_template("index.html", entries=entries)
 
-@app.route("/entry/preview/")
+@app.route("/entry/preview/", methods=["POST"])
 @login_required
 def show_preview():
+    title = request.form["title"]
     content = request.form["content"]
-    html = markdown_to_html(content)
+    content_html = markdown_to_html(content)
+    return render_template("preview.html", title=title, content=content_html)

@@ -50,7 +50,10 @@
           {% if entry.user_id == session["user_id"] %}
           |
           <li>
+            <!--
             <a href="{{ url_for('delete_comment', entry_id=entry.id, comment_id=comment.id) }}">delete</a>
+            -->
+            <a class="delete" href="{{ url_for('delete_comment', entry_id=entry.id, comment_id=comment.id) }}"><i class="far fa-trash-alt"></i></a>
           </li>
           {% endif %}
         </ul>
