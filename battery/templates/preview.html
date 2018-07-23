@@ -14,7 +14,7 @@
 
 
   <div class="content">
-    {{ content | safe }}
+    {{ markdown_to_html(content) | safe }}
   </div>
 
 </article>

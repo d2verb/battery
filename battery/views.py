@@ -3,21 +3,6 @@ from battery.models import User, Entry, Comment
 from flask import render_template, request, session, flash, redirect, url_for
 from flask import g, jsonify, abort
 from functools import wraps
-from markdown import markdown
-
-def markdown_to_html(mdtext):
-    html = markdown(mdtext, extensions=['extra', 'codehilite'])
-    return html
-
-def get_username(user_id):
-    user = User.query.get(user_id)
-    if user:
-        return user.name
-    else:
-        return ""
-
-app.jinja_env.globals.update(get_username=get_username)
-app.jinja_env.globals.update(markdown_to_html=markdown_to_html)
 
 def login_required(fn):
     @wraps(fn)
@@ -138,5 +123,4 @@ def search_entries():
 def show_preview():
     title = request.form["title"]
     content = request.form["content"]
-    content_html = markdown_to_html(content)
-    return render_template("preview.html", title=title, content=content_html)
+    return render_template("preview.html", title=title, content=content)
