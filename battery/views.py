@@ -1,5 +1,4 @@
-from battery import db
-from battery.models import User, Entry, Comment
+from battery.models import db, User, Entry, Comment
 from flask import render_template, request, session, flash, redirect, url_for
 from flask import g, jsonify, abort, Blueprint
 from functools import wraps
@@ -13,7 +12,7 @@ def login_required(fn):
     def decorated_view(*args, **kwargs):
         if g.user is None:
             flash("You must log in first")
-            return redirect(url_for("login", next=request.path))
+            return redirect(url_for("app.login", next=request.path))
         return fn(*args, **kwargs)
     return decorated_view
 
@@ -39,7 +38,7 @@ def login():
         if authenticated:
             session["user_id"] = user.id
             flash("You were logged in")
-            return redirect(url_for("index"))
+            return redirect(url_for("app.index"))
         else:
             flash("Invalid username or password")
     return render_template("login.html")
@@ -49,7 +48,7 @@ def login():
 def logout():
     session.pop("user_id", None)
     flash("You were logged out")
-    return redirect(url_for("index"))
+    return redirect(url_for("app.index"))
 
 @bp.route("/entry/new/", methods=["GET", "POST"])
 @login_required
@@ -60,9 +59,9 @@ def create_entry():
                       user_id=session["user_id"])
         db.session.add(entry)
         db.session.commit()
-        return redirect(url_for("show_entry", entry_id=entry.id))
+        return redirect(url_for("app.show_entry", entry_id=entry.id))
 
-    return render_template("editor.html", destination=url_for("create_entry"))
+    return render_template("editor.html", destination=url_for("app.create_entry"))
 
 @bp.route("/entry/<int:entry_id>/edit/", methods=["GET", "POST"])
 def edit_entry(entry_id):
@@ -73,10 +72,10 @@ def edit_entry(entry_id):
         entry.content = request.form["content"];
         db.session.commit()
 
-        return redirect(url_for("show_entry", entry_id=entry.id))
+        return redirect(url_for("app.show_entry", entry_id=entry.id))
 
     return render_template("editor.html",
-                           destination=url_for("edit_entry", entry_id=entry_id),
+                           destination=url_for("app.edit_entry", entry_id=entry_id),
                            title=entry.title,
                            content=entry.content)
 
@@ -92,7 +91,7 @@ def delete_entry(entry_id):
     entry = Entry.query.get(entry_id)
     db.session.delete(entry)
     db.session.commit()
-    return redirect(url_for("index"))
+    return redirect(url_for("app.index"))
 
 @bp.route("/entry/<int:entry_id>/comment/", methods=["POST"])
 def create_comment(entry_id):
@@ -106,7 +105,7 @@ def create_comment(entry_id):
                       entry_id=entry_id)
     db.session.add(comment)
     db.session.commit()
-    return redirect(url_for("show_entry", entry_id=entry_id))
+    return redirect(url_for("app.show_entry", entry_id=entry_id))
 
 @bp.route("/entry/<int:entry_id>/comment/<int:comment_id>/")
 @login_required
@@ -114,7 +113,7 @@ def delete_comment(entry_id, comment_id):
     comment = Comment.query.get(comment_id)
     db.session.delete(comment)
     db.session.commit()
-    return redirect(url_for("show_entry", entry_id=entry_id))
+    return redirect(url_for("app.show_entry", entry_id=entry_id))
 
 @bp.route("/entry/search/")
 def search_entries():

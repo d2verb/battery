@@ -1,8 +1,11 @@
-from battery import db
+from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 
 from sqlalchemy.orm import synonym
 from werkzeug import check_password_hash, generate_password_hash
+
+# initialize db later in create_app
+db = SQLAlchemy()
 
 class User(db.Model):
     __tablename__ = "users"
@@ -75,7 +78,3 @@ class Comment(db.Model):
             id=self.id,
             entry_id=self.entry_id,
             author=self.author)
-
-
-def init():
-    db.create_all()
