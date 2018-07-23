@@ -3,7 +3,7 @@
 <article>
   <div class="title">
     <h1>
-      <a href="{{ url_for('show_entry', entry_id=entry.id) }}">
+      <a href="{{ url_for('app.show_entry', entry_id=entry.id) }}">
         {{ entry.title }}
       </a>
     </h1>
@@ -16,8 +16,8 @@
     <span class="author">{{ get_username(entry.user_id) }}</span>
 
     {% if entry.user_id == session.user_id %}
-    <a class="edit" href="{{ url_for('edit_entry', entry_id=entry.id) }}"><i class="far fa-edit"></i></a>
-    <a class="delete" href="{{ url_for('delete_entry', entry_id=entry.id) }}"><i class="far fa-trash-alt"></i></a>
+    <a class="edit" href="{{ url_for('app.edit_entry', entry_id=entry.id) }}"><i class="far fa-edit"></i></a>
+    <a class="delete" href="{{ url_for('app.delete_entry', entry_id=entry.id) }}"><i class="far fa-trash-alt"></i></a>
     {% endif %}
   </div>
 
@@ -28,7 +28,7 @@
 
   <div class="comments">
     <h3>Leave your comment</h3>
-    <form action="{{ url_for('create_comment', entry_id=entry.id) }}" method="post">
+    <form action="{{ url_for('app.create_comment', entry_id=entry.id) }}" method="post">
       <label for="author">Your name</label>
       <input type="text" name="author" placeholder="Your name">
       <label for="content">Comment</label>
@@ -51,9 +51,9 @@
           |
           <li>
             <!--
-            <a href="{{ url_for('delete_comment', entry_id=entry.id, comment_id=comment.id) }}">delete</a>
+            <a href="{{ url_for('app.delete_comment', entry_id=entry.id, comment_id=comment.id) }}">delete</a>
             -->
-            <a class="delete" href="{{ url_for('delete_comment', entry_id=entry.id, comment_id=comment.id) }}"><i class="far fa-trash-alt"></i></a>
+            <a class="delete" href="{{ url_for('app.delete_comment', entry_id=entry.id, comment_id=comment.id) }}"><i class="far fa-trash-alt"></i></a>
           </li>
           {% endif %}
         </ul>
