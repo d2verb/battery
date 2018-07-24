@@ -1,8 +1,12 @@
 from flask import Flask
 
-def create_app():
+def create_app(config=None):
     app = Flask(__name__)
-    app.config.from_object("battery.config")
+
+    if config is None:
+        app.config.from_object("battery.config")
+    else:
+        app.config.from_mapping(config)
 
     from battery.models import db
     db.init_app(app)
