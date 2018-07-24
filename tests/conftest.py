@@ -38,6 +38,12 @@ def db(app, request):
     _db.app = app
     _db.create_all()
 
+    # prepare default user
+    from battery.models import User
+    user = User(name="defuser", password="pass")
+    _db.session.add(user)
+    _db.session.commit()
+
     request.addfinalizer(teardown)
     return _db
 
