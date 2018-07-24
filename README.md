@@ -1,13 +1,6 @@
+[![CircleCI](https://circleci.com/gh/d2verb/battery.svg?style=svg)](https://circleci.com/gh/d2verb/battery)
+
 Battery is a blog engine written in python. Note that this project is WIP.
-
-## How to use
-
-```
-$ pip install -r requirements
-$ export FLASK_APP=./battery
-$ export FLASK_ENV=development
-$ flask run
-```
 
 ## Features
 - [x] post entry
@@ -20,6 +13,20 @@ $ flask run
 - [ ] security features
 - [ ] archive
 
+## How to use
+
+```
+$ pip install -r requirements
+$ export FLASK_APP=./battery
+$ export FLASK_ENV=development
+$ flask run
+```
+
+## How to run tests
+
+```
+$ python -m pytest
+```
 ## ScreenShots
 ![entry page](img/entry-page-screenshot.png)
 
