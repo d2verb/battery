@@ -28,7 +28,7 @@
 
   <div class="comments">
     <h3>Leave your comment</h3>
-    <form action="{{ url_for('app.create_comment', entry_id=entry.id) }}" method="post">
+    <form action="{{ url_for('app.post_comment', entry_id=entry.id) }}" method="post">
       <label for="author">Your name</label>
       <input type="text" name="author" placeholder="Your name">
       <label for="content">Comment</label>

@@ -2,6 +2,7 @@ from battery.models import db, User, Entry, Comment
 from flask import render_template, request, session, flash, redirect, url_for
 from flask import g, jsonify, abort, Blueprint
 from functools import wraps
+from sqlalchemy.exc import IntegrityError
 
 # There is no merit to use blueprint now
 # I just don't want views.py depend on specific app object
@@ -24,6 +25,33 @@ def load_user():
     else:
         g.user = User.query.get(session["user_id"])
 
+@bp.route("/user/create", methods=["GET", "POST"])
+def create_user():
+    if request.method == "GET":
+        return render_template("user/create.html")
+
+    user = User(username=request.form["username"],
+                password=request.form["password"])
+
+    db.session.add(user)
+
+    try:
+        db.session.commit()
+    except IntegrityError as e:
+        if "UNIQUE constraint failed" in str(e):
+            flash("{username} is already in use".format(username=user.username))
+        return redirect(url_for("app.create_user"))
+    except:
+        flash("Something wrong happened. Please contact administrator")
+        return redirect(url_for("app.create_user"))
+    else:
+        flash("User creation complete")
+        return redirect(url_for("app.login"))
+
+@bp.route("/user/<int:user_id>/setting", methods=["GET"])
+def user_setting(user_id):
+    return render_template("user/setting.html")
+    
 @bp.route("/")
 def index():
     entries = Entry.query.order_by(Entry.id.desc()).all()
@@ -52,7 +80,7 @@ def logout():
 
 @bp.route("/entry/new/", methods=["GET", "POST"])
 @login_required
-def create_entry():
+def post_entry():
     if request.method == "POST":
         entry = Entry(title=request.form["title"],
                       content=request.form["content"],
@@ -61,7 +89,7 @@ def create_entry():
         db.session.commit()
         return redirect(url_for("app.show_entry", entry_id=entry.id))
 
-    return render_template("editor.html", destination=url_for("app.create_entry"))
+    return render_template("editor.html", destination=url_for("app.post_entry"))
 
 @bp.route("/entry/<int:entry_id>/edit/", methods=["GET", "POST"])
 def edit_entry(entry_id):
@@ -94,7 +122,7 @@ def delete_entry(entry_id):
     return redirect(url_for("app.index"))
 
 @bp.route("/entry/<int:entry_id>/comment/", methods=["POST"])
-def create_comment(entry_id):
+def post_comment(entry_id):
     author = request.form["author"]
 
     if not author:

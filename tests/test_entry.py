@@ -1,13 +1,10 @@
 from battery.models import User, Entry
+from utils import prepare_user, prepare_entry
 
 def test_create_entry(session):
-    user = User.query.filter_by(name="defuser").first()
-    entry = Entry(title="test title",
-                  content="test content",
-                  user_id=user.id)
-    
-    session.add(entry)
-    session.commit()
+    user = prepare_user(session, username="test", password="test")
+    entry = prepare_entry(session, title="test title", content="test content",
+                          user_id=user.id)
 
     _entry = Entry.query.filter_by(id = entry.id).first()
 

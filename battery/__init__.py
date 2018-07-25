@@ -10,6 +10,7 @@ def create_app(config=None):
 
     from battery.models import db
     db.init_app(app)
+    db.create_all(app=app)
 
     from battery.views import bp
     app.register_blueprint(bp)

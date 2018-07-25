@@ -4,9 +4,9 @@
 <nav class="toolbar">
   <ul>
     {% if session.user_id %}
-    <li><a href="{{ url_for('app.create_entry') }}">New entry</a></li>
+    <li><a href="{{ url_for('app.post_entry') }}">New entry</a></li>
     <li><a href="{{ url_for('app.logout') }}">Log out</a></li>
-    <li>({{ g.user.name }})</li>
+    <li>({{ g.user.username }})</li>
     {% else %}
     <li><a href="{{ url_for('app.login') }}">Log in</a></li>
     {% endif %}

@@ -11,7 +11,7 @@ class User(db.Model):
     __tablename__ = "users"
 
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(100), unique=True, nullable=False)
+    username = db.Column(db.String(100), unique=True, nullable=False)
     _password = db.Column("password", db.String(100), nullable=False)
 
     def _get_password(self):
@@ -32,14 +32,15 @@ class User(db.Model):
         return check_password_hash(self.password, password)
 
     @classmethod
-    def authenticate(cls, query, name, password):
-        user = query(cls).filter(cls.name == name).first()
+    def authenticate(cls, query, username, password):
+        user = query(cls).filter(cls.username == username).first()
         if user is None:
             return None, False
         return user, user.check_password(password)
 
     def __repr__(self):
-        return "<User id={id} name={name}>".format(id=self.id, name=self.name)
+        return "<User id={id} username={username}>".format(id=self.id,
+                                                           username=self.username)
 
 
 class Entry(db.Model):
