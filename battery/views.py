@@ -25,33 +25,6 @@ def load_user():
     else:
         g.user = User.query.get(session["user_id"])
 
-@bp.route("/user/create", methods=["GET", "POST"])
-def create_user():
-    if request.method == "GET":
-        return render_template("user/create.html")
-
-    user = User(username=request.form["username"],
-                password=request.form["password"])
-
-    db.session.add(user)
-
-    try:
-        db.session.commit()
-    except IntegrityError as e:
-        if "UNIQUE constraint failed" in str(e):
-            flash("{username} is already in use".format(username=user.username))
-        return redirect(url_for("app.create_user"))
-    except:
-        flash("Something wrong happened. Please contact administrator")
-        return redirect(url_for("app.create_user"))
-    else:
-        flash("User creation complete")
-        return redirect(url_for("app.login"))
-
-@bp.route("/user/<int:user_id>/setting", methods=["GET"])
-def user_setting(user_id):
-    return render_template("user/setting.html")
-    
 @bp.route("/")
 def index():
     entries = Entry.query.order_by(Entry.id.desc()).all()
@@ -59,20 +32,20 @@ def index():
 
 @bp.route("/login", methods=["GET", "POST"])
 def login():
-    if request.method == "POST":
-        user, authenticated = User.authenticate(db.session.query,
-                                                request.form["username"],
-                                                request.form["password"])
-        if authenticated:
-            session["user_id"] = user.id
-            flash("You were logged in")
-            return redirect(url_for("app.index"))
-        else:
-            flash("Invalid username or password")
-    return render_template("login.html")
+    if request.method == "GET":
+        return render_template("login.html")
+
+    user, authenticated = User.authenticate(db.session.query,
+                                            request.form["username"],
+                                            request.form["password"])
+    if authenticated:
+        session["user_id"] = user.id
+        flash("You were logged in")
+        return redirect(url_for("app.index"))
+    else:
+        flash("Invalid username or password")
 
 @bp.route("/logout")
-@login_required
 def logout():
     session.pop("user_id", None)
     flash("You were logged out")
@@ -81,31 +54,31 @@ def logout():
 @bp.route("/entry/new/", methods=["GET", "POST"])
 @login_required
 def post_entry():
-    if request.method == "POST":
-        entry = Entry(title=request.form["title"],
-                      content=request.form["content"],
-                      user_id=session["user_id"])
-        db.session.add(entry)
-        db.session.commit()
-        return redirect(url_for("app.show_entry", entry_id=entry.id))
+    if request.method == "GET":
+        return render_template("editor.html", destination=url_for("app.post_entry"))
 
-    return render_template("editor.html", destination=url_for("app.post_entry"))
+    entry = Entry(title=request.form["title"],
+                  content=request.form["content"],
+                  user_id=session["user_id"])
+    db.session.add(entry)
+    db.session.commit()
+    return redirect(url_for("app.show_entry", entry_id=entry.id))
 
 @bp.route("/entry/<int:entry_id>/edit/", methods=["GET", "POST"])
 def edit_entry(entry_id):
     entry = Entry.query.get(entry_id)
 
-    if request.method == "POST":
-        entry.title = request.form["title"];
-        entry.content = request.form["content"];
-        db.session.commit()
+    if request.method == "GET":
+        return render_template("editor.html",
+                               destination=url_for("app.edit_entry", entry_id=entry_id),
+                               title=entry.title,
+                               content=entry.content)
 
-        return redirect(url_for("app.show_entry", entry_id=entry.id))
+    entry.title = request.form["title"];
+    entry.content = request.form["content"];
+    db.session.commit()
 
-    return render_template("editor.html",
-                           destination=url_for("app.edit_entry", entry_id=entry_id),
-                           title=entry.title,
-                           content=entry.content)
+    return redirect(url_for("app.show_entry", entry_id=entry.id))
 
 @bp.route("/entry/<int:entry_id>/")
 def show_entry(entry_id):
