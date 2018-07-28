@@ -4,7 +4,8 @@ import os
 def create_app(config=None):
     app = Flask(__name__, instance_relative_config=True)
     app.config.from_mapping(
-        SQLALCHEMY_DATABASE_URI="sqlite:///" + app.instance_path + "/battery.db"
+        SQLALCHEMY_DATABASE_URI="sqlite:///" + app.instance_path + "/battery.db",
+        UPLOAD_DIR = app.instance_path + "/upload"
     )
 
     if config is None:
@@ -18,7 +19,7 @@ def create_app(config=None):
         pass
 
     try:
-        os.makedirs(app.instance_path + "/upload_dir")
+        os.makedirs(app.config["UPLOAD_DIR"])
     except OSError:
         pass
 

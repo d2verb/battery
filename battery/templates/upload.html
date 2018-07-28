@@ -1,0 +1,35 @@
+{% extends "meta.html" %}
+{% block container %}
+<h1>Upload an image file</h1>
+
+{% for message in get_flashed_messages() %}                                            
+<div class=flash>{{ message }}</div>
+{% endfor %}
+
+<p>You can upload small image file via this form.</p>
+
+<form action="/data/upload/" method="post" name="uploader" class="uploader" enctype="multipart/form-data">
+  <div class="file-selector">
+    <input type="file" name="file">
+    <p>Max size is 1MB per file</p>
+  </div>
+  <input type="submit" value="Upload">
+</form>
+
+
+<h1>Images</h1>
+<hr>
+<div class="file-list">
+{% for file in files %}
+  <div class="file-group">
+    <a href="/data/{{file}}">
+    <img src="/data/{{file}}" width=100px>
+    </a>
+    <a href="/data/delete/{{file}}">
+    <button>Delete</button>
+    </a>
+  </div>
+{% endfor %}
+</div>
+
+{% endblock %}

@@ -1,8 +1,12 @@
 from battery.models import db, User, Entry, Comment
 from flask import render_template, request, session, flash, redirect, url_for
-from flask import g, jsonify, abort, Blueprint
+from flask import g, jsonify, abort, Blueprint, current_app, send_file
 from functools import wraps
 from sqlalchemy.exc import IntegrityError
+from werkzeug.utils import secure_filename
+from datetime import datetime
+from imghdr import test_png, test_jpeg, test_bmp, test_gif
+import os
 
 # There is no merit to use blueprint now
 # I just don't want views.py depend on specific app object
@@ -128,3 +132,44 @@ def show_preview():
     title = request.form["title"]
     content = request.form["content"]
     return render_template("preview.html", title=title, content=content)
+
+
+@bp.route("/data/<string:file_name>/", methods=["GET"])
+def dowload_img(file_name):
+    upload_dir = current_app.config["UPLOAD_DIR"]
+    file_path = os.path.join(upload_dir, secure_filename(file_name))
+    return send_file(file_path)
+
+@bp.route("/data/upload/", methods=["GET", "POST"])
+def upload_img():
+    upload_dir = current_app.config["UPLOAD_DIR"]
+
+    if request.method == "GET":
+        files = os.listdir(upload_dir)
+        return render_template("upload.html", files=files)
+
+    file = request.files["file"]
+    head = file.read(20)
+
+    valid_type = False
+    for test in (test_png, test_jpeg, test_bmp, test_gif):
+        # I don't know whether the 2nd arg is valid or not.
+        # these test function is defined at:
+        #   https://hg.python.org/cpython/file/3.6/Lib/imghdr.py
+        valid_type = valid_type or test(head, None)
+
+    if not valid_type:
+        flash("Invalid file type")
+    else:
+        file_name = datetime.now().strftime("%Y%m%d_%H%M%S_") + secure_filename(file.filename)
+        file.seek(0) # really need this?
+        file.save(os.path.join(upload_dir, file_name))
+
+    return redirect(url_for("app.upload_img"))
+
+@bp.route("/data/delete/<string:file_name>/", methods=["GET"])
+def delete_img(file_name):
+    upload_dir = current_app.config["UPLOAD_DIR"]
+    file_path = os.path.join(upload_dir, file_name)
+    os.remove(file_path)
+    return redirect(url_for("app.upload_img"))

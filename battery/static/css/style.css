@@ -338,3 +338,39 @@ p.copyright {
 .byline .fa-trash-alt {
   color: #b7282e;
 }
+
+/* uploader */
+.uploader p {
+  margin-bottom: 0px;
+}
+
+.uploader .file-selector {
+  padding: 10px;
+  background: #eee;
+  border-radius: 10px;
+  margin-bottom: 5px;
+}
+
+.uploader input[type="submit"] {
+  margin-left: 10px;
+}
+
+.file-list .file-group {
+  margin-top: 20px;
+  display: inline-block;
+  margin-right: 37px;
+  margin-bottom: 20px;
+}
+
+.file-list .file-group:nth-child(6n) {
+  margin-right: 0px;
+}
+
+.file-list .file-group img {
+  display: block;
+}
+
+.file-list .file-group button {
+  margin-top: 2px;
+  width: 100%;
+}
