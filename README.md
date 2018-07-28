@@ -11,7 +11,7 @@ Battery is a blog engine written in python. Note that this project is WIP.
 - [ ] TeX extension
 - [ ] security features
 - [ ] archive
-- [ ] upload
+- [x] upload
 
 ## How to use
 
@@ -28,7 +28,9 @@ $ flask run
 $ python -m pytest
 ```
 ## ScreenShots
-![entry page](img/entry-page-screenshot.png)
+[Top Page](img/toppage.png)
+[Blog Entry Page](img/entrypage.png)
+[Upload Page](img/uploadpage.png)
 
 ## LICENSE
 This software is released under the MIT License, see LICENSE.
