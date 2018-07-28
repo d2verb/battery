@@ -7,10 +7,16 @@ body {
   font-size: 1.4rem;
 }
 
-.flash {
-  background: #cee5F5;
+.flash-error {
+  color: #721c24;
+  background: #f8d7da;
   padding: 0.5em;
-  border: 1px solid #aacbe2;
+}
+
+.flash-info {
+  color: #004085;
+  background: #cce5ff;
+  padding: 0.5em;
 }
 
 a {

@@ -16,7 +16,7 @@ def login_required(fn):
     @wraps(fn)
     def decorated_view(*args, **kwargs):
         if g.user is None:
-            flash("You must log in first")
+            flash("You must log in first", "error")
             return redirect(url_for("app.login", next=request.path))
         return fn(*args, **kwargs)
     return decorated_view
@@ -39,20 +39,28 @@ def login():
     if request.method == "GET":
         return render_template("login.html")
 
+    username = request.form["username"]
+    password = request.form["password"]
+    
+    if not username or not password:
+        flash("Username or password is empty", "error")
+        return render_template("login.html")
+
     user, authenticated = User.authenticate(db.session.query,
                                             request.form["username"],
                                             request.form["password"])
     if authenticated:
         session["user_id"] = user.id
-        flash("You were logged in")
+        flash("You were logged in", "info")
         return redirect(url_for("app.index"))
     else:
-        flash("Invalid username or password")
+        flash("Invalid username or password", "error")
+        return render_template("login.html")
 
 @bp.route("/logout")
 def logout():
     session.pop("user_id", None)
-    flash("You were logged out")
+    flash("You were logged out", "info")
     return redirect(url_for("app.index"))
 
 @bp.route("/entry/new/", methods=["GET", "POST"])
@@ -61,9 +69,19 @@ def post_entry():
     if request.method == "GET":
         return render_template("editor.html", destination=url_for("app.post_entry"))
 
+    title = request.form["title"]
+    content = request.form["content"]
+
+    if not title:
+        flash("Title is empty", "error")
+        return render_template("editor.html",
+                               content=content,
+                               destination=url_for("app.post_entry"))
+
     entry = Entry(title=request.form["title"],
                   content=request.form["content"],
                   user_id=session["user_id"])
+
     db.session.add(entry)
     db.session.commit()
     return redirect(url_for("app.show_entry", entry_id=entry.id))
@@ -77,6 +95,15 @@ def edit_entry(entry_id):
                                destination=url_for("app.edit_entry", entry_id=entry_id),
                                title=entry.title,
                                content=entry.content)
+
+    title = request.form["title"]
+    content = request.form["content"]
+
+    if not title:
+        flash("Title is empty", "error")
+        return render_template("editor.html",
+                               content=content,
+                               destination=url_for("app.edit_entry", entry_id=entry_id))
 
     entry.title = request.form["title"];
     entry.content = request.form["content"];
@@ -159,7 +186,7 @@ def upload_img():
         valid_type = valid_type or test(head, None)
 
     if not valid_type:
-        flash("Invalid file type")
+        flash("Invalid file type", "error")
     else:
         file_name = datetime.now().strftime("%Y%m%d_%H%M%S_") + secure_filename(file.filename)
         file.seek(0) # really need this?

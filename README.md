@@ -29,7 +29,9 @@ $ python -m pytest
 ```
 ## ScreenShots
 [Top Page](img/toppage.png)
+
 [Blog Entry Page](img/entrypage.png)
+
 [Upload Page](img/uploadpage.png)
 
 ## LICENSE
