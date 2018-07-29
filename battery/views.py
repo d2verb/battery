@@ -6,6 +6,8 @@ from sqlalchemy.exc import IntegrityError
 from werkzeug.utils import secure_filename
 from datetime import datetime
 from imghdr import test_png, test_jpeg, test_bmp, test_gif
+from calendar import monthrange
+from collections import defaultdict
 import os
 
 # There is no merit to use blueprint now
@@ -31,7 +33,7 @@ def load_user():
 
 @bp.route("/")
 def index():
-    entries = Entry.query.order_by(Entry.id.desc()).all()
+    entries = Entry.query.order_by(Entry.created_at.desc()).all()
     return render_template("index.html", entries=entries)
 
 @bp.route("/login", methods=["GET", "POST"])
@@ -200,3 +202,58 @@ def delete_img(file_name):
     file_path = os.path.join(upload_dir, file_name)
     os.remove(file_path)
     return redirect(url_for("app.upload_img"))
+
+def calc_archive_range(year, month=None, day=None):
+    # set month range
+    start_month = end_month = month
+    if month is None:
+        start_month = 1
+        end_month = 12
+
+    # set day range
+    start_day = end_day = day
+    if day is None:
+        start_day = 1
+        end_day = 31 if month is None else monthrange(year, month)[1]
+
+    return (start_month, start_day, end_month, end_day)
+
+@bp.route("/archive/", methods=["GET"])
+def archive():
+    entries = Entry.query.order_by(Entry.created_at).all()
+
+    oldest_datetime = entries[0].created_at
+    newest_datetime = entries[-1].created_at
+
+    n_entries = defaultdict(lambda: [])
+    for year in range(newest_datetime.year, oldest_datetime.year-1, -1):
+        for month in range(12, 0, -1):
+            start_day = 1
+            _,end_day = monthrange(year, month)
+
+            start_datetime = datetime(year, month, start_day, 0, 0, 0, 0)
+            end_datetime = datetime(year, month, end_day, 23, 59, 59, 999)
+
+            n = Entry.query.filter(start_datetime <= Entry.created_at,
+                                   Entry.created_at <= end_datetime).count()
+
+            if n == 0:
+                continue
+
+            n_entries[year].append((month, n))
+    return render_template("archive.html", n_entries=n_entries)
+
+@bp.route("/archive/<int:year>/<int:month>/<int:day>", methods=["GET"])
+@bp.route("/archive/<int:year>/<int:month>", methods=["GET"])
+@bp.route("/archive/<int:year>/", methods=["GET"])
+def archive_with_datetime(year, month=None, day=None):
+    start_month, start_day, end_month, end_day = calc_archive_range(year, month, day)
+
+    # create datetime object
+    start_datetime = datetime(year, start_month, start_day, 0, 0, 0, 0)
+    end_datetime = datetime(year, end_month, end_day, 23, 59, 59, 999)
+
+    # find entries
+    entries = Entry.query.filter(start_datetime <= Entry.created_at,
+                                 Entry.created_at <= end_datetime).all()
+    return render_template("index.html", entries=entries)

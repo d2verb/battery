@@ -8,7 +8,7 @@ config = {
 }
 
 def configure_app(app):
-    config_name = os.getenv("FLASK_ENV", "production")
+    config_name = os.getenv("FLASK_ENV", "development")
     app.config.from_object(config[config_name])
 
     if app.config["INSTANCE_PATH"] is not None:

@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block body %}
+<h1>Monthly Archive</h1>
+{% for year, months in n_entries.items() %}
+<div class="archive-year">
+  <i class="fas fa-angle-right angle" id="angle-{{year}}" onclick="toggle_archive_list({{year}});"></i>
+  <div class="archive-year-label">{{year}}</div>
+  <ul class="archive-list" id="archive-list-{{year}}" style="display:none;">
+    {% for month, n in months %}
+    <li><a href="/archive/{{year}}/{{month}}">{{year}} / {{month}} ({{n}})</a></li>
+    {% endfor %}
+  </ul>
+</div>
+{% endfor %}
+{% endblock %}

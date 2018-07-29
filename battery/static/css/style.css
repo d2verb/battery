@@ -380,3 +380,29 @@ p.copyright {
   margin-top: 2px;
   width: 100%;
 }
+
+/* archive */
+.archive-year {
+  border-bottom: 1px solid #ddd;
+  margin-bottom: 10px;
+  padding-bottom: 10px;
+}
+
+.archive-year-label {
+  display: inline-block;
+}
+
+.archive-list {
+  list-style-type: none;
+  margin-top: 5px;
+  margin-bottom: 0px;
+  padding-left: 30px;
+}
+
+.archive-list li {
+  padding-bottom: 5px;
+}
+
+.angle {
+  cursor: pointer;
+}

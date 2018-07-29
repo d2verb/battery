@@ -12,3 +12,8 @@ function open_preview_window() {
   document.editor.action = original_action;
   document.editor.target = original_target;
 }
+
+function toggle_archive_list(year) {
+  $(`#archive-list-${year}`).toggle();
+  $(`#angle-${year}`).toggleClass("fa-angle-right fa-angle-down");
+}
