@@ -18,13 +18,22 @@ Battery is a blog engine written in python. Note that this project is WIP.
 ```
 $ pip install -r requirements
 $ export FLASK_APP=./battery
+
+# development mode
+$ export FLASK_ENV=development
+$ flask run
+
+# production mode
 $ export FLASK_ENV=development
 $ flask run
 ```
 
+You can override the default configuration by createing instance/config.py. Battery will automatically load it if it exists.
+
 ## How to run tests
 
 ```
+$ export FLASK_ENV=testing
 $ python -m pytest
 ```
 ## ScreenShots

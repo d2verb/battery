@@ -1,17 +1,35 @@
 from flask import Flask
 import os
 
-def create_app(config=None):
-    app = Flask(__name__, instance_relative_config=True)
+config = {
+    "development": "battery.config.Development",
+    "testing": "battery.config.Testing",
+    "production": "battery.config.Production"
+}
+
+def configure_app(app):
+    config_name = os.getenv("FLASK_ENV", "production")
+    app.config.from_object(config[config_name])
+
+    if app.config["INSTANCE_PATH"] is not None:
+        app.instance_path = app.config["INSTANCE_PATH"]
+
+    # setup db path and upload dir dynamically
+    SQLALCHEMY_DATABASE_URI = "sqlite:///{}/battery.db".format(app.instance_path)
+    UPLOAD_DIR = os.path.join(app.instance_path, "upload")
+
     app.config.from_mapping(
-        SQLALCHEMY_DATABASE_URI="sqlite:///" + app.instance_path + "/battery.db",
-        UPLOAD_DIR = app.instance_path + "/upload"
+        SQLALCHEMY_DATABASE_URI = SQLALCHEMY_DATABASE_URI,
+        UPLOAD_DIR = UPLOAD_DIR 
     )
 
-    if config is None:
-        app.config.from_object("battery.config")
-    else:
-        app.config.from_mapping(config)
+    # user defined configuration
+    if os.path.exists(os.path.join(app.instance_path, "config.py")):
+        app.config.from_pyfile("config.py", silent=True)
+
+def create_app():
+    app = Flask(__name__, instance_relative_config=True)
+    configure_app(app)
 
     try:
         os.makedirs(app.instance_path)

@@ -1,33 +1,28 @@
 import os
-import tempfile
 import pytest
 
 from battery import create_app
 from battery.models import db as _db
-
-TEST_DB_PATH = tempfile.mkstemp()[1]
-TEST_DB_URI = "sqlite:///" + TEST_DB_PATH
+from shutil import rmtree
 
 @pytest.fixture(scope="session")
 def app(request):
-    test_config = {
-        "TESTING": True,
-        "SQLALCHEMY_DATABASE_URI": TEST_DB_URI,
-        "SQLALCHEMY_TRACK_MODIFICATIONS": True
-    }
-    app = create_app(test_config)
+    app = create_app()
 
     ctx = app.app_context()
     ctx.push()
 
     def teardown():
         ctx.pop()
+        rmtree(app.instance_path)
 
     request.addfinalizer(teardown)
     return app
 
 @pytest.fixture(scope="session")
 def db(app, request):
+    TEST_DB_PATH = os.path.join(app.instance_path, "battery.db")
+
     if os.path.exists(TEST_DB_PATH):
         os.unlink(TEST_DB_PATH)
 

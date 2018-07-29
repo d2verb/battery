@@ -48,6 +48,7 @@ jobs:
           name: run tests
           command: |
             . venv/bin/activate
+            export FLASK_ENV=testing
             python -m pytest
 
       - store_artifacts:
