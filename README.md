@@ -12,6 +12,8 @@ Battery is a blog engine written in python. Note that this project is WIP.
 - [ ] security features
 - [x] archive
 - [x] upload
+- [ ] save as drafe
+- [ ] category
 
 ## How to run
 You can run battery easily in your local machine. If you want to run battery on your server with apache, please see doc/INSTALL.md
