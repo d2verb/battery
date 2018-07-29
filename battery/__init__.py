@@ -1,4 +1,5 @@
 from flask import Flask
+import pathlib
 import os
 
 config = {
@@ -13,6 +14,9 @@ def configure_app(app):
 
     if app.config["INSTANCE_PATH"] is not None:
         app.instance_path = app.config["INSTANCE_PATH"]
+    else:
+        project_root = pathlib.Path(__file__).parent.parent
+        app.instance_path = os.path.join(project_root, "instance")
 
     # setup db path and upload dir dynamically
     SQLALCHEMY_DATABASE_URI = "sqlite:///{}/battery.db".format(app.instance_path)

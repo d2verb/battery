@@ -222,6 +222,9 @@ def calc_archive_range(year, month=None, day=None):
 def archive():
     entries = Entry.query.order_by(Entry.created_at).all()
 
+    if not entries:
+      return render_template("archive.html", n_entries={})
+
     oldest_datetime = entries[0].created_at
     newest_datetime = entries[-1].created_at
 
