@@ -224,6 +224,10 @@ p.copyright {
   font-weight: 700;
 }
 
+#save-as-draft {
+  display: inline-block;
+}
+
 /* entry */
 /* comment form */
 .comments form {
@@ -343,6 +347,10 @@ p.copyright {
 
 .byline .fa-trash-alt {
   color: #b7282e;
+}
+
+#draft-icon {
+  margin-left: 10px;
 }
 
 /* uploader */

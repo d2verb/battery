@@ -14,6 +14,9 @@
     <time>{{ entry.created_at }}</time>
     <i class="fas fa-user"></i>
     <span class="author">{{ get_username(entry.user_id) }}</span>
+    {% if not entry.is_public and entry.user_id == session.user_id %}
+    <i class="fas fa-user-secret" id="draft-icon"></i>
+    {% endif %}
 
     {% if entry.user_id == session.user_id %}
     <a class="edit" href="{{ url_for('app.edit_entry', entry_id=entry.id) }}"><i class="far fa-edit"></i></a>

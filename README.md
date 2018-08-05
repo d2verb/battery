@@ -12,7 +12,7 @@ Battery is a blog engine written in python. Note that this project is WIP.
 - [ ] security features
 - [x] archive
 - [x] upload
-- [ ] save as draf
+- [x] save as draft
 - [ ] category
 
 ## How to run

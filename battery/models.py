@@ -54,6 +54,7 @@ class Entry(db.Model):
     content = db.Column(db.Text)
     created_at = db.Column(db.Date, default=datetime.now().date())
     updated_at = db.Column(db.Date, default=datetime.now().date())
+    is_public = db.Column(db.Boolean, default=True)
 
     def __repr__(self):
         return "<Entry id={id} t={title!r} c={created_at} u={updated_at}>".format(

@@ -73,6 +73,7 @@ def post_entry():
 
     title = request.form["title"]
     content = request.form["content"]
+    save_as_draft = request.form["save-as-draft"]
 
     if not title:
         flash("Title is empty", "error")
@@ -82,15 +83,25 @@ def post_entry():
 
     entry = Entry(title=request.form["title"],
                   content=request.form["content"],
-                  user_id=session["user_id"])
+                  user_id=session["user_id"],
+                  is_public=not save_as_draft)
 
     db.session.add(entry)
     db.session.commit()
     return redirect(url_for("app.show_entry", entry_id=entry.id))
 
 @bp.route("/entry/<int:entry_id>/edit/", methods=["GET", "POST"])
+@login_required
 def edit_entry(entry_id):
     entry = Entry.query.get(entry_id)
+
+    if entry is None:
+        flash("Entry not found", "error")
+        return redirect(url_for("app.index"))
+    
+    if g.user.id != entry.user_id:
+        flash("Entry not found", "error")
+        return redirect(url_for("app.index"))
 
     if request.method == "GET":
         return render_template("editor.html",
@@ -116,6 +127,15 @@ def edit_entry(entry_id):
 @bp.route("/entry/<int:entry_id>/")
 def show_entry(entry_id):
     entry = Entry.query.get(entry_id)
+
+    if entry is None:
+        flash("Entry not found", "error")
+        return redirect(url_for("app.index"))
+
+    if not entry.is_public and (g.user is None or g.user.id != entry.user_id):
+        flash("Entry not found", "error")
+        return redirect(url_for("app.index"))
+
     comments = Comment.query.filter_by(entry_id=entry_id)
     return render_template("entry.html", entry=entry, comments=comments)
 
@@ -123,6 +143,15 @@ def show_entry(entry_id):
 @login_required
 def delete_entry(entry_id):
     entry = Entry.query.get(entry_id)
+
+    if entry is None:
+        flash("Entry not found", "error")
+        return redirect(url_for("app.index"))
+
+    if g.user.id != entry.user_id:
+        flash("Entry not found", "error")
+        return redirect(url_for("app.index"))
+
     db.session.delete(entry)
     db.session.commit()
     return redirect(url_for("app.index"))
@@ -141,12 +170,27 @@ def post_comment(entry_id):
     db.session.commit()
     return redirect(url_for("app.show_entry", entry_id=entry_id))
 
-@bp.route("/entry/<int:entry_id>/comment/<int:comment_id>/")
+@bp.route("/entry/<int:entry_id>/comment/<int:comment_id>/delete/")
 @login_required
 def delete_comment(entry_id, comment_id):
+    entry = Entry.query.get(entry_id)
+
+    if entry is None:
+        flash("Entry not found", "error")
+        return redirect(url_for("app.index"))
+
+    if g.user.id != entry.user_id:
+        flash("Entry not found", "error")
+        return redirect(url_for("app.index"))
+
     comment = Comment.query.get(comment_id)
-    db.session.delete(comment)
-    db.session.commit()
+
+    if comment is None:
+        flash("Comment not found", "error")
+    else:
+        db.session.delete(comment)
+        db.session.commit()
+
     return redirect(url_for("app.show_entry", entry_id=entry_id))
 
 @bp.route("/entry/search/")
