@@ -73,7 +73,7 @@ def post_entry():
 
     title = request.form["title"]
     content = request.form["content"]
-    save_as_draft = request.form["save-as-draft"]
+    save_as_draft = request.form.get("save-as-draft", False)
 
     if not title:
         flash("Title is empty", "error")
@@ -111,6 +111,7 @@ def edit_entry(entry_id):
 
     title = request.form["title"]
     content = request.form["content"]
+    save_as_draft = request.form.get("save-as-draft", False)
 
     if not title:
         flash("Title is empty", "error")
@@ -118,8 +119,9 @@ def edit_entry(entry_id):
                                content=content,
                                destination=url_for("app.edit_entry", entry_id=entry_id))
 
-    entry.title = request.form["title"];
-    entry.content = request.form["content"];
+    entry.title = request.form["title"]
+    entry.content = request.form["content"]
+    entry.is_public = not save_as_draft
     db.session.commit()
 
     return redirect(url_for("app.show_entry", entry_id=entry.id))
@@ -247,6 +249,10 @@ def delete_img(file_name):
     os.remove(file_path)
     return redirect(url_for("app.upload_img"))
 
+@bp.route("/about/", methods=["GET"])
+def about():
+    return render_template("about.html")
+
 def calc_archive_range(year, month=None, day=None):
     # set month range
     start_month = end_month = month
@@ -264,7 +270,7 @@ def calc_archive_range(year, month=None, day=None):
 
 @bp.route("/archive/", methods=["GET"])
 def archive():
-    entries = Entry.query.order_by(Entry.created_at).all()
+    entries = Entry.query.filter(Entry.is_public).order_by(Entry.created_at).all()
 
     if not entries:
       return render_template("archive.html", n_entries={})
@@ -302,5 +308,6 @@ def archive_with_datetime(year, month=None, day=None):
 
     # find entries
     entries = Entry.query.filter(start_datetime <= Entry.created_at,
-                                 Entry.created_at <= end_datetime).all()
+                                 Entry.created_at <= end_datetime,
+                                 Entry.is_public).all()
     return render_template("index.html", entries=entries)
