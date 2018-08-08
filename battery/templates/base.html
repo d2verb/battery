@@ -8,8 +8,6 @@
     <li><a target="_blank" href="{{ url_for('app.upload_img') }}">Upload</a></li>
     <li><a href="{{ url_for('app.logout') }}">Log out</a></li>
     <li>({{ g.user.username }})</li>
-    {% else %}
-    <li><a href="{{ url_for('app.login') }}">Log in</a></li>
     {% endif %}
   </ul>
 </nav>
