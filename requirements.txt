@@ -15,4 +15,4 @@ Pygments==2.2.0
 pytest==3.6.3
 six==1.11.0
 SQLAlchemy==1.2.10
-Werkzeug==0.14.1
+Werkzeug==0.15.3
